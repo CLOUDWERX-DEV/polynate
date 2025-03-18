@@ -292,16 +292,34 @@ const Navigation = () => {
       height: '100%',
       overflow: 'hidden' 
     }}>
-      <List sx={{ py: 1, flexShrink: 0, px: 1 }}>
-        <ListItem sx={{ px: 2, mb: 0.5 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
-            <img src={logo} alt="Polynate Logo" style={{ width: '80px', height: '80px' }} />
-            <Typography variant="h4" sx={{ fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.1, mt: '25px', ml: '-23px' }}>
+      <Box sx={{ pt: 0.75, pb: 0.5, flexShrink: 0, px: 1 }}>
+        <Box sx={{ px: 1.5, mb: 0.25 }}>
+          <Box 
+            component="a"
+            href="http://polynate.cloudwerx.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1.5, 
+              py: 0.75,
+              textDecoration: 'none',
+              color: 'inherit',
+              '&:hover': {
+                opacity: 0.9
+              }
+            }}
+          >
+            <img src={logo} alt="Polynate Logo" style={{ width: '75px', height: '75px' }} />
+            <Typography variant="h4" sx={{ fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.1, mt: '22px', ml: '-20px', fontSize: '1.8rem' }}>
               Polynate
             </Typography>
           </Box>
-        </ListItem>
+        </Box>
         <Divider sx={{ mb: 0.25, opacity: 0.2 }} />
+      </Box>
+      <List sx={{ py: 0, flexShrink: 0, px: 1 }}>
         <Box sx={{ py: 0.25 }}>
           {navItems.map((item) => (
             <ListItem key={item.name} disablePadding sx={{ mb: 0 }}>

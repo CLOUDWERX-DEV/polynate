@@ -1,0 +1,16 @@
+name: polynate
+build:
+  command: CI=false npm run build
+  environment:
+    NODE_VERSION: 18
+    NPM_VERSION: 9
+  output-directory: build
+routes:
+  - pattern: /assets/*
+    path: /assets
+  - pattern: /*
+    statically_render: false
+    path: /index.html
+compatibility-date: 2023-01-01
+compatibility-flags:
+  - url_standard

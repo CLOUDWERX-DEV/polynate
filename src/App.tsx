@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react
 import { 
   Box, 
   Typography, 
-  Button, 
   CssBaseline, 
   ThemeProvider, 
   createTheme, 
@@ -18,7 +17,6 @@ import {
   useMediaQuery,
   IconButton,
   Collapse,
-  Stack,
   Chip
 } from '@mui/material';
 import { 
@@ -28,18 +26,14 @@ import {
   Menu as MenuIcon,
   ExpandMore,
   ExpandLess,
-  SettingsOutlined,
   TuneOutlined,
   GitHub as GitHubIcon,
   Api as ApiOutlined
 } from '@mui/icons-material';
 import ImageGenerator from './components/ImageGenerator';
-import { ImageParams } from './components/ImageGenerator';
 import logo from './logo.svg';
 import TextGenerator from './components/TextGenerator';
-import { TextParams } from './components/TextGenerator';
 import AudioGenerator from './components/AudioGenerator';
-import { AudioParams } from './components/AudioGenerator';
 
 // Create a macOS-inspired glass-like theme
 const theme = createTheme({

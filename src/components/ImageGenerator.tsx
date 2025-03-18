@@ -121,7 +121,7 @@ export const ImageParams: React.FC<{
         </Select>
       </FormControl>
       
-      <Box sx={{ mt: 1 }}>
+      <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <AspectRatioOutlined fontSize="small" />
           Dimensions
@@ -171,7 +171,7 @@ export const ImageParams: React.FC<{
         </Typography>
       </Box>
       
-      <Box sx={{ mt: 1 }}>
+      <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TagOutlined fontSize="small" />
@@ -221,7 +221,9 @@ export const ImageParams: React.FC<{
                 />
               }
               label="Random"
-              sx={{ m: 0 }}
+              sx={{ m: 0, my: 0.5 }}
+              labelPlacement="end"
+              componentsProps={{ typography: { ml: 2 } }}
             />
           </Tooltip>
         </Stack>
@@ -229,11 +231,11 @@ export const ImageParams: React.FC<{
       
       <Divider sx={{ opacity: 0.6 }} />
       
-      <Box sx={{ mt: 1 }}>
+      <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" gutterBottom>
           Options
         </Typography>
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <FormControlLabel
             control={
               <Switch 
@@ -243,6 +245,9 @@ export const ImageParams: React.FC<{
               />
             }
             label="Enhance Prompt"
+            sx={{ py: 0.5 }}
+            labelPlacement="end"
+            componentsProps={{ typography: { ml: 2 } }}
           />
           <FormControlLabel
             control={
@@ -253,6 +258,9 @@ export const ImageParams: React.FC<{
               />
             }
             label="No Logo"
+            sx={{ py: 0.5 }}
+            labelPlacement="end"
+            componentsProps={{ typography: { ml: 2 } }}
           />
           <FormControlLabel
             control={
@@ -263,6 +271,9 @@ export const ImageParams: React.FC<{
               />
             }
             label="Safe Mode"
+            sx={{ py: 0.5 }}
+            labelPlacement="end"
+            componentsProps={{ typography: { ml: 2 } }}
           />
           <FormControlLabel
             control={
@@ -273,6 +284,9 @@ export const ImageParams: React.FC<{
               />
             }
             label="Private"
+            sx={{ py: 0.5 }}
+            labelPlacement="end"
+            componentsProps={{ typography: { ml: 2 } }}
           />
         </Stack>
       </Box>

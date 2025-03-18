@@ -123,6 +123,22 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
+          '& .MuiInputLabel-root': {
+            // Improve label visibility
+            '&.Mui-focused': {
+              backgroundColor: 'transparent',
+            },
+          },
+          '& .MuiInputLabel-outlined': {
+            // Create proper label background when field is focused
+            '&.MuiInputLabel-shrink': {
+              backgroundColor: '#121212',  // Match app background
+              paddingLeft: 5,
+              paddingRight: 5,
+              marginLeft: -5,  // Offset the padding to align correctly
+              borderRadius: 3,  // Rounded corners for the label background
+            },
+          },
           '& .MuiOutlinedInput-root': {
             borderRadius: 8,
             background: alpha('#121212', 0.3),
@@ -138,6 +154,10 @@ const theme = createTheme({
           },
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: 'rgba(255, 255, 255, 0.1)',
+            // Ensure the notch for the label is the right size
+            '& legend': {
+              fontSize: '0.85em',  // Match the font size of the shrunk label
+            },
           },
         },
       },

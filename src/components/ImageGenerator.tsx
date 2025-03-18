@@ -966,7 +966,7 @@ export const ImageGenerator: React.FC = () => {
           
           <img
             src={imageUrl}
-            alt="Full size generated image"
+            alt="Generated content based on prompt"
             style={{
               maxWidth: '100%',
               maxHeight: 'calc(90vh - 40px)',

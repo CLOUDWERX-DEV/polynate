@@ -1,17 +1,46 @@
 # Polynate
 
-<img src="public/logo192.png" alt="Polynate Logo" width="100" />
+<p align="center">
+  <img src="public/logo512.png" alt="Polynate Logo" width="200" />
+</p>
+
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <a href="https://reactjs.org/"><img src="https://img.shields.io/badge/React-19.0.0-61DAFB?logo=react" alt="React"></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-4.9.5-3178C6?logo=typescript" alt="TypeScript"></a>
+  <a href="https://mui.com/"><img src="https://img.shields.io/badge/Material%20UI-6.4.8-0081CB?logo=material-ui" alt="Material UI"></a>
+</p>
+
+<p align="center">
+  <strong>AI-powered text and audio content generation platform</strong>
+</p>
+
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-getting-started">Getting Started</a> •
+  <a href="#-usage">Usage</a> •
+  <a href="#-development">Development</a> •
+  <a href="#-license">License</a>
+</p>
 
 Polynate is a modern React-based AI playground that provides a user-friendly interface for interacting with various AI generation services from [Pollinations.ai](https://pollinations.ai).
 
-## Features
+## ✨ Features
 
 - **Text Generation**: Create text content using advanced language models
 - **Image Generation**: Generate images from text prompts with customizable parameters
 - **Audio Generation**: Convert text to speech with different voice options
 - **Image Analysis**: Analyze images using AI vision models
 
-## Getting Started
+## 🖼️ Screenshots
+
+**Click to expand screenshots**
+
+> _Note: Screenshots will be added once the UI is finalized._
+>
+> _Example: ![Polynate Screenshot](./docs/images/screenshot1.png)_
+
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -34,7 +63,7 @@ npm start
 
 Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
-## Usage
+## 📖 Usage
 
 Polynate offers three main generation tools:
 
@@ -42,11 +71,11 @@ Polynate offers three main generation tools:
 2. **Image Generator**: Create images from text descriptions with options for dimensions, seed, and more
 3. **Audio Generator**: Convert text to spoken audio with different voice options
 
-## API Integration
+## 🔌 API Integration
 
 Polynate integrates with the [Pollinations.ai](https://pollinations.ai) API to provide AI generation services. The integration is seamless and doesn't require API keys for basic usage.
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 - **React 19**: Modern UI library for building interactive interfaces
 - **TypeScript**: Type-safe JavaScript for better developer experience
@@ -54,7 +83,7 @@ Polynate integrates with the [Pollinations.ai](https://pollinations.ai) API to p
 - **Axios**: HTTP client for API requests
 - **React Router**: Navigation and routing solution
 
-## Development
+## 👨‍💻 Development
 
 ### Available Scripts
 
@@ -82,15 +111,24 @@ polynate/
 └── package.json         # Dependencies and scripts
 ```
 
-## Contributing
+## 👥 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Here's how you can contribute:
 
-## License
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Please make sure to update tests as appropriate and follow the code style of the project.
 
-## Acknowledgments
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
 
 - [Pollinations.ai](https://pollinations.ai) for providing the AI generation APIs
-- [React](https://reactjs.org/) and [Material UI](https://mui.com/) teams for excellent libraries
+- [React](https://reactjs.org/) for the amazing UI library
+- All the open-source libraries that made this project possible

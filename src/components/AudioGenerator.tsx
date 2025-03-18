@@ -27,12 +27,7 @@ import {
 import { pollinationsService } from '../services/pollinationsService';
 import { PolynateContext, GeneratorType } from '../App';
 
-// Interface used for model selection
-interface Model {
-  id: string;
-  name: string;
-  description?: string;
-}
+// Models are handled directly in the component
 
 // Export for the App context
 export const AudioParams: React.FC<{

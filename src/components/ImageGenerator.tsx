@@ -24,7 +24,8 @@ import {
   alpha,
   Chip,
   Fade,
-  IconButton
+  IconButton,
+  Modal
 } from '@mui/material';
 import {
   AspectRatioOutlined,
@@ -32,7 +33,10 @@ import {
   Replay as ReplayIcon,
   ShuffleOutlined,
   LockOutlined,
-  LockOpenOutlined
+  LockOpenOutlined,
+  Download as DownloadIcon,
+  Close as CloseIcon,
+  ZoomIn as ZoomInIcon
 } from '@mui/icons-material';
 import { pollinationsService } from '../services/pollinationsService';
 import { PolynateContext } from '../App';
@@ -299,6 +303,8 @@ export const ImageParams: React.FC<{
 };
 
 export const ImageGenerator: React.FC = () => {
+  // State for lightbox
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   // Get context for parameter sharing
   const { setImageParams, setActiveGenerator } = useContext(PolynateContext);
 
@@ -589,25 +595,26 @@ export const ImageGenerator: React.FC = () => {
   }, [setActiveGenerator]);
 
   return (
-    <Box sx={{ 
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      pt: 4,
-      pb: 8,
-      minHeight: '100vh'
-    }}>
-      <Box sx={{
-        width: 'calc(100% - 220px)', // Account for the sidebar width minus overlap
+    <>
+      <Box sx={{ 
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: 2, // Reduced gap for minimal spacing between elements
-        mx: 'auto', // Center the content box
-        position: 'relative'
+        justifyContent: 'flex-start',
+        pt: 4,
+        pb: 8,
+        minHeight: '100vh'
       }}>
+        <Box sx={{
+          width: 'calc(100% - 220px)', // Account for the sidebar width minus overlap
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 2, // Reduced gap for minimal spacing between elements
+          mx: 'auto', // Center the content box
+          position: 'relative'
+        }}>
             {/* Generated image display */}
             {!imageUrl && !loading && (
               <Box 
@@ -730,19 +737,74 @@ export const ImageGenerator: React.FC = () => {
                       </Typography>
                     </Box>
                   )}
-                  <CardMedia
-                    component="img"
-                    image={imageUrl}
-                    alt="Generated image"
-                    sx={{
-                      width: '1050px',
-                      height: '1050px',
-                      objectFit: 'contain',
-                      backgroundColor: 'rgba(0,0,0,0.2)',
-                      display: 'block',
-                      borderRadius: '16px'
-                    }}
-                  />
+                  <Box sx={{ position: 'relative' }}>  
+                    <CardMedia
+                      component="img"
+                      image={imageUrl}
+                      alt="Generated image"
+                      onClick={() => setLightboxOpen(true)}
+                      sx={{
+                        width: '1050px',
+                        height: '1050px',
+                        objectFit: 'contain',
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        display: 'block',
+                        borderRadius: '16px',
+                        cursor: 'pointer',
+                        transition: 'transform 0.3s',
+                        '&:hover': {
+                          transform: 'scale(1.01)',
+                        }
+                      }}
+                    />
+                    <IconButton 
+                      onClick={() => setLightboxOpen(true)}
+                      sx={{ 
+                        position: 'absolute', 
+                        bottom: 16, 
+                        right: 80, 
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        color: 'white',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0,0,0,0.7)'
+                        }
+                      }}
+                    >
+                      <ZoomInIcon />
+                    </IconButton>
+                    <IconButton 
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the main image click (lightbox)
+                        // Create a hidden anchor element for downloading
+                        const a = document.createElement('a');
+                        // Clone the URL to ensure we get a downloadable resource
+                        fetch(imageUrl)
+                          .then(response => response.blob())
+                          .then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            a.href = url;
+                            a.download = `polynate-image-${Date.now()}.png`;
+                            a.style.display = 'none';
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                            document.body.removeChild(a);
+                          });
+                      }}
+                      sx={{ 
+                        position: 'absolute', 
+                        bottom: 16, 
+                        right: 16, 
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        color: 'white',
+                        '&:hover': {
+                          backgroundColor: 'rgba(0,0,0,0.7)'
+                        }
+                      }}
+                    >
+                      <DownloadIcon />
+                    </IconButton>
+                  </Box>
                   <CardContent sx={{ py: 2, width: '100%' }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                       <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -817,8 +879,95 @@ export const ImageGenerator: React.FC = () => {
                 </Paper>
               </Fade>
             )}
+        </Box>
       </Box>
-    </Box>
+
+      {/* Lightbox modal */}
+      <Modal
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        aria-labelledby="image-lightbox"
+        aria-describedby="full-size-image-view"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          p: 2
+        }}
+      >
+        <Box sx={{
+          position: 'relative',
+          maxWidth: '90vw',
+          maxHeight: '90vh',
+          outline: 'none',
+          borderRadius: '16px', // Rounded corners to match design preference
+          overflow: 'hidden',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+        }}>
+          <IconButton
+            onClick={() => setLightboxOpen(false)}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 8,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              color: 'white',
+              zIndex: 10,
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.7)'
+              }
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          
+          <IconButton
+            onClick={() => {
+              // Create a hidden anchor element for downloading
+              const a = document.createElement('a');
+              // Clone the URL to ensure we get a downloadable resource
+              fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                  const url = window.URL.createObjectURL(blob);
+                  a.href = url;
+                  a.download = `polynate-image-${Date.now()}.png`;
+                  a.style.display = 'none';
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  document.body.removeChild(a);
+                });
+            }}
+            sx={{
+              position: 'absolute',
+              top: 8,
+              right: 56,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              color: 'white',
+              zIndex: 10,
+              '&:hover': {
+                backgroundColor: 'rgba(0,0,0,0.7)'
+              }
+            }}
+          >
+            <DownloadIcon />
+          </IconButton>
+          
+          <img
+            src={imageUrl}
+            alt="Full size generated image"
+            style={{
+              maxWidth: '100%',
+              maxHeight: 'calc(90vh - 40px)',
+              display: 'block',
+              margin: '0 auto',
+            }}
+          />
+        </Box>
+      </Modal>
+    </>
   );
 };
 

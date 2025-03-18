@@ -439,8 +439,18 @@ export const ImageGenerator: React.FC = () => {
     if (!prompt) return;
     try {
       console.log('Starting image generation with prompt:', prompt);
+      // Immediately set loading state BEFORE clearing image URL
+      // This is important for the fade transition sequence
       setLoading(true);
       setError(null);
+      
+      // After setting loading state, clear the image URL to avoid showing the old image during loading
+      if (imageUrl) {
+        // Store URL in session storage before clearing it from state
+        sessionStorage.setItem('lastImageUrl', imageUrl);
+        // Clear the imageUrl immediately to prevent it from showing during loading
+        setImageUrl('');
+      }
       
       let finalPrompt = prompt;
       
@@ -527,7 +537,17 @@ export const ImageGenerator: React.FC = () => {
         const finalUrl = serviceUrl || directUrl;
         console.log('Final image URL being set:', finalUrl);
         
-        // Set the image URL in state
+        // Preload the image before updating state to prevent flashing
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = finalUrl;
+        }).catch(err => {
+          console.warn('Image preload failed but continuing anyway:', err);
+        });
+        
+        // Set the image URL in state after preloading
         setImageUrl(finalUrl);
       } catch (urlError) {
         console.error('Error generating image URL:', urlError);
@@ -545,7 +565,8 @@ export const ImageGenerator: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [prompt, width, height, model, enhance, noLogo, safe, privateMode, seedValue, randomSeed]);
+  // Include imageUrl in dependency array to fix ESLint warning
+  }, [prompt, width, height, model, enhance, noLogo, safe, privateMode, seedValue, randomSeed, imageUrl]);
 
   // Create and update params for sidebar - with memoized handleGenerate to prevent unnecessary regeneration
   const memoizedHandleGenerate = useCallback(handleGenerate, [handleGenerate]);
@@ -625,128 +646,82 @@ export const ImageGenerator: React.FC = () => {
           position: 'relative'
         }}>
             {/* Generated image display */}
-            {!imageUrl && !loading && (
-              <Box 
-                sx={{ 
-                  width: '1050px',
-                  height: '1050px',
-                  display: 'flex', 
-                  position: 'relative',
-                  borderRadius: '16px', // More rounded corners
-                  background: alpha('#121212', 0.3),
-                  backdropFilter: 'blur(8px)',
-                  border: '1px dashed rgba(255, 255, 255, 0.15)',
-                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxSizing: 'border-box',
-                  left: '50%',
-                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
-                }}
-              >
-                <Box sx={{ 
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'absolute',
-                  inset: 0,
-                  p: 6, // Much larger padding to prevent any text cutoff
-                  textAlign: 'center'
-                }}>
-                  <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.25rem', width: '100%', maxWidth: '80%' }}>
-                    Enter a prompt and click Generate to create an image
-                  </Typography>
-                </Box>
-              </Box>
-            )}
+            {/* This placeholder was moved into the ternary condition above */}
             
-            {loading && (
-              <Box 
-                sx={{ 
-                  width: '1050px',
-                  height: '1050px',
-                  display: 'flex',
-                  position: 'relative',
-                  borderRadius: '16px', // More rounded corners
-                  background: alpha('#121212', 0.3),
-                  backdropFilter: 'blur(8px)',
-                  border: '1px dashed rgba(255, 255, 255, 0.15)',
-                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  boxSizing: 'border-box',
-                  left: '50%',
-                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
-                }}
-              >
-                <Box sx={{ 
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'absolute',
-                  inset: 0,
-                  p: 6, // Much larger padding to prevent any text cutoff
-                  textAlign: 'center'
-                }}>
-                  <CircularProgress size={60} sx={{ mb: 3 }} />
-                  <Typography variant="h6" color="text.secondary" gutterBottom>
-                    Generating your image
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    This may take a few moments...
-                  </Typography>
-                </Box>
-              </Box>
-            )}
-            
-            {imageUrl && (
-              <Fade in={!!imageUrl} timeout={800}>
-                <Card 
-                  elevation={0} 
-                  sx={{ 
-                    borderRadius: '16px', // More rounded corners
-                    overflow: 'visible',
-                    transition: 'all 0.3s ease',
-                    position: 'relative',
-                    ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
-                    width: '1050px',
+            {/* Main container with fixed position - only renders ONE of the three states */}
+            <Box sx={{
+              position: 'relative',
+              width: '1050px',
+              height: '1050px',
+              ml: { xs: 0, md: -120 },
+              left: '50%',
+              transform: 'translateX(calc(-50% + 60px))',
+              mb: 2
+            }}>
+              {/* Rendering logic: only show one state at a time based on priority */}
+              {/* 1. Loading state has highest priority */}
+              {loading ? (
+                <Fade in={loading} timeout={300} appear>
+                  <Box 
+                    sx={{ 
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      position: 'absolute',
+                      borderRadius: '16px',
+                      background: alpha('#121212', 0.8),
+                      backdropFilter: 'blur(8px)',
+                      border: '1px dashed rgba(255, 255, 255, 0.15)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxSizing: 'border-box',
+                      top: 0,
+                      left: 0,
+                      zIndex: 50 // Much higher z-index to ensure it's above everything
+                    }}
+                >
+                  <Box sx={{ 
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    boxSizing: 'border-box',
-                    mb: 2, // Reduce bottom margin for tighter spacing
-                    left: '50%',
-                    transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
-                  }}
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    inset: 0,
+                    p: 6, // Much larger padding to prevent any text cutoff
+                    textAlign: 'center'
+                  }}>
+                    <CircularProgress size={60} sx={{ mb: 3 }} />
+                    <Typography variant="h6" color="text.secondary" gutterBottom>
+                      {imageUrl ? 'Regenerating image' : 'Generating your image'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      This may take a few moments...
+                    </Typography>
+                  </Box>
+                </Box>
+                </Fade>
+              ) : imageUrl ? (
+                /* 2. If not loading, show image content if available */
+                <Fade in={true} timeout={800}>
+                  <Card 
+                    elevation={0} 
+                    sx={{ 
+                      borderRadius: '16px',
+                      overflow: 'visible',
+                      transition: 'all 0.3s ease',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'flex-start',
+                      boxSizing: 'border-box'
+                    }}
                 >
-                  {/* Add overlay with spinner when loading */}
-                  {loading && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        zIndex: 10,
-                        backdropFilter: 'blur(5px)',
-                        borderRadius: '16px' // More rounded corners to match container
-                      }}
-                    >
-                      <CircularProgress size={60} sx={{ mb: 3 }} />
-                      <Typography variant="h6" color="white" gutterBottom>
-                        Regenerating image
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box sx={{ position: 'relative' }}>  
+                  <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>  
                     <CardMedia
                       component="img"
                       image={imageUrl}
@@ -814,7 +789,7 @@ export const ImageGenerator: React.FC = () => {
                       <DownloadIcon />
                     </IconButton>
                   </Box>
-                  <CardContent sx={{ py: 2, width: '100%' }}>
+                  <CardContent sx={{ py: 2, width: '100%', backgroundColor: alpha('#121212', 0.5), borderRadius: '0 0 16px 16px', mt: 'auto' }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                       <Stack direction="row" spacing={1} flexWrap="wrap">
                         <Chip 
@@ -851,10 +826,45 @@ export const ImageGenerator: React.FC = () => {
                     </Stack>
                   </CardContent>
                 </Card>
-              </Fade>
-            )}
+                </Fade>
+              ) : (
+                /* 3. If not loading and no image, show the empty placeholder */
+                <Box 
+                  sx={{ 
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex', 
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    borderRadius: '16px',
+                    background: alpha('#121212', 0.3),
+                    backdropFilter: 'blur(8px)',
+                    border: '1px dashed rgba(255, 255, 255, 0.15)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxSizing: 'border-box',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <Box sx={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    inset: 0,
+                    p: 6,
+                    textAlign: 'center'
+                  }}>
+                    <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.25rem', width: '100%', maxWidth: '80%' }}>
+                      Enter a prompt and click Generate to create an image
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            </Box>
             
-            {/* Enhanced prompt display */}
+            {/* Enhanced prompt display - with added margin-top */}
             {enhance && enhancedPrompt && (
               <Fade in={!!enhancedPrompt} timeout={500}>
                 <Paper sx={{ 
@@ -863,16 +873,17 @@ export const ImageGenerator: React.FC = () => {
                   borderLeft: '4px solid',
                   borderColor: 'primary.main',
                   ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
+                  mt: 3, // Add space between the image and this prompt box
                   backgroundColor: alpha('#121212', 0.5),
                   width: '1050px',
                   display: 'flex',
                   flexDirection: 'column',
                   boxSizing: 'border-box',
                   wordBreak: 'break-word',
-                  mt: 2, // Reduced top margin
                   position: 'relative',
                   left: '50%',
-                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
+                  transform: 'translateX(calc(-50% + 60px))', // Center in viewport while respecting sidebar extension
+                  zIndex: 5 // Ensure enhanced prompt appears above other elements
                 }}>
                   <Typography variant="subtitle1" fontWeight={500} gutterBottom>
                     Enhanced Prompt

@@ -94,9 +94,9 @@ export const ImageParams: React.FC<{
         sx={{ mb: 1 }}
       />
       
-      <Divider sx={{ opacity: 0.6 }} />
+      <Divider sx={{ opacity: 0.6, my: 1 }} />
       
-      <FormControl fullWidth variant="outlined" size="small">
+      <FormControl fullWidth variant="outlined" size="small" sx={{ mt: 1 }}>
         <InputLabel>Model</InputLabel>
         <Select
           value={model}
@@ -117,8 +117,8 @@ export const ImageParams: React.FC<{
         </Select>
       </FormControl>
       
-      <Box>
-        <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ mt: 1 }}>
+        <Typography variant="subtitle2" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <AspectRatioOutlined fontSize="small" />
           Dimensions
         </Typography>
@@ -167,7 +167,7 @@ export const ImageParams: React.FC<{
         </Typography>
       </Box>
       
-      <Box>
+      <Box sx={{ mt: 1 }}>
         <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TagOutlined fontSize="small" />
@@ -225,7 +225,7 @@ export const ImageParams: React.FC<{
       
       <Divider sx={{ opacity: 0.6 }} />
       
-      <Box>
+      <Box sx={{ mt: 1 }}>
         <Typography variant="subtitle2" gutterBottom>
           Options
         </Typography>
@@ -280,8 +280,9 @@ export const ImageParams: React.FC<{
         disabled={!prompt || loading}
         fullWidth
         sx={{ 
-          mt: 1,
-          color: '#000000', // Black text for better contrast
+          mt: 3,
+          py: 1.2,
+          color: '#333333', // Dark grey text for better contrast
           fontWeight: 'bold'
         }}
       >
@@ -588,49 +589,98 @@ export const ImageGenerator: React.FC = () => {
   }, [setActiveGenerator]);
 
   return (
-    <Box sx={{ width: '100%', maxWidth: '1200px', mx: 'auto' }}>
-      <Box sx={{ minHeight: 300, display: 'flex', flexDirection: 'column', gap: 3, p: 3 }}>
+    <Box sx={{ 
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      pt: 4,
+      pb: 8,
+      minHeight: '100vh'
+    }}>
+      <Box sx={{
+        width: 'calc(100% - 220px)', // Account for the sidebar width minus overlap
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 2, // Reduced gap for minimal spacing between elements
+        mx: 'auto', // Center the content box
+        position: 'relative'
+      }}>
             {/* Generated image display */}
             {!imageUrl && !loading && (
               <Box 
                 sx={{ 
-                  height: '70vh', 
+                  width: '1050px',
+                  height: '1050px',
                   display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  borderRadius: 3,
+                  position: 'relative',
+                  borderRadius: '16px', // More rounded corners
                   background: alpha('#121212', 0.3),
                   backdropFilter: 'blur(8px)',
-                  border: '1px dashed rgba(255, 255, 255, 0.15)'
+                  border: '1px dashed rgba(255, 255, 255, 0.15)',
+                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxSizing: 'border-box',
+                  left: '50%',
+                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
                 }}
               >
-                <Typography variant="h6" color="text.secondary">
-                  Enter a prompt and click Generate to create an image
-                </Typography>
+                <Box sx={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  inset: 0,
+                  p: 6, // Much larger padding to prevent any text cutoff
+                  textAlign: 'center'
+                }}>
+                  <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.25rem', width: '100%', maxWidth: '80%' }}>
+                    Enter a prompt and click Generate to create an image
+                  </Typography>
+                </Box>
               </Box>
             )}
             
             {loading && (
               <Box 
                 sx={{ 
-                  height: '70vh', 
-                  display: 'flex', 
-                  flexDirection: 'column',
-                  alignItems: 'center', 
-                  justifyContent: 'center',
-                  borderRadius: 3,
+                  width: '1050px',
+                  height: '1050px',
+                  display: 'flex',
+                  position: 'relative',
+                  borderRadius: '16px', // More rounded corners
                   background: alpha('#121212', 0.3),
                   backdropFilter: 'blur(8px)',
-                  border: '1px dashed rgba(255, 255, 255, 0.15)'
+                  border: '1px dashed rgba(255, 255, 255, 0.15)',
+                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxSizing: 'border-box',
+                  left: '50%',
+                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
                 }}
               >
-                <CircularProgress size={60} sx={{ mb: 3 }} />
-                <Typography variant="h6" color="text.secondary" gutterBottom>
-                  Generating your image
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  This may take a few moments...
-                </Typography>
+                <Box sx={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  inset: 0,
+                  p: 6, // Much larger padding to prevent any text cutoff
+                  textAlign: 'center'
+                }}>
+                  <CircularProgress size={60} sx={{ mb: 3 }} />
+                  <Typography variant="h6" color="text.secondary" gutterBottom>
+                    Generating your image
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This may take a few moments...
+                  </Typography>
+                </Box>
               </Box>
             )}
             
@@ -639,10 +689,20 @@ export const ImageGenerator: React.FC = () => {
                 <Card 
                   elevation={0} 
                   sx={{ 
-                    borderRadius: 3,
-                    overflow: 'hidden',
+                    borderRadius: '16px', // More rounded corners
+                    overflow: 'visible',
                     transition: 'all 0.3s ease',
-                    position: 'relative'
+                    position: 'relative',
+                    ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
+                    width: '1050px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    boxSizing: 'border-box',
+                    mb: 2, // Reduce bottom margin for tighter spacing
+                    left: '50%',
+                    transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
                   }}
                 >
                   {/* Add overlay with spinner when loading */}
@@ -661,7 +721,7 @@ export const ImageGenerator: React.FC = () => {
                         justifyContent: 'center',
                         zIndex: 10,
                         backdropFilter: 'blur(5px)',
-                        borderRadius: 3
+                        borderRadius: '16px' // More rounded corners to match container
                       }}
                     >
                       <CircularProgress size={60} sx={{ mb: 3 }} />
@@ -675,13 +735,15 @@ export const ImageGenerator: React.FC = () => {
                     image={imageUrl}
                     alt="Generated image"
                     sx={{
-                      width: '100%',
-                      maxHeight: '75vh',
+                      width: '1050px',
+                      height: '1050px',
                       objectFit: 'contain',
                       backgroundColor: 'rgba(0,0,0,0.2)',
+                      display: 'block',
+                      borderRadius: '16px'
                     }}
                   />
-                  <CardContent sx={{ py: 2 }}>
+                  <CardContent sx={{ py: 2, width: '100%' }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                       <Stack direction="row" spacing={1} flexWrap="wrap">
                         <Chip 
@@ -724,11 +786,32 @@ export const ImageGenerator: React.FC = () => {
             {/* Enhanced prompt display */}
             {enhance && enhancedPrompt && (
               <Fade in={!!enhancedPrompt} timeout={500}>
-                <Paper sx={{ p: 3, borderRadius: 3 }}>
+                <Paper sx={{ 
+                  p: 3, 
+                  borderRadius: '16px', // More rounded corners
+                  borderLeft: '4px solid',
+                  borderColor: 'primary.main',
+                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
+                  backgroundColor: alpha('#121212', 0.5),
+                  width: '1050px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxSizing: 'border-box',
+                  wordBreak: 'break-word',
+                  mt: 2, // Reduced top margin
+                  position: 'relative',
+                  left: '50%',
+                  transform: 'translateX(calc(-50% + 60px))' // Center in viewport while respecting sidebar extension
+                }}>
                   <Typography variant="subtitle1" fontWeight={500} gutterBottom>
                     Enhanced Prompt
                   </Typography>
-                  <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', opacity: 0.87 }}>
+                  <Typography variant="body2" sx={{ 
+                    whiteSpace: 'pre-wrap', 
+                    opacity: 0.87,
+                    overflowWrap: 'break-word',
+                    width: '100%'
+                  }}>
                     {enhancedPrompt}
                   </Typography>
                 </Paper>

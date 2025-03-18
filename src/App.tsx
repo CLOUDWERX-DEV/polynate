@@ -32,6 +32,7 @@ import {
   TuneOutlined
 } from '@mui/icons-material';
 import { ImageGenerator, ImageParams } from './components/ImageGenerator';
+import logo from './logo.svg';
 import { TextGenerator } from './components/TextGenerator';
 // TextParams will be implemented later
 import { AudioGenerator } from './components/AudioGenerator';
@@ -225,7 +226,7 @@ export const PolynateContext = createContext<PolynateContextType>({
 });
 
 // The sidebar width
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 340;
 
 // Navigation items
 const navItems = [
@@ -274,11 +275,14 @@ const Navigation = () => {
       height: '100%',
       overflow: 'hidden' 
     }}>
-      <List sx={{ py: 2, flexShrink: 0 }}>
+      <List sx={{ py: 2, flexShrink: 0, px: 1 }}>
         <ListItem sx={{ px: 3, mb: 1 }}>
-          <Typography variant="h5" sx={{ fontWeight: 600, letterSpacing: '-0.5px' }}>
-            Polynate
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, py: 2 }}>
+            <img src={logo} alt="Polynate Logo" style={{ width: '96px', height: '96px' }} />
+            <Typography variant="h4" sx={{ fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.1, mt: '25px', ml: '-23px' }}>
+              Polynate
+            </Typography>
+          </Box>
         </ListItem>
         <Divider sx={{ mb: 1, opacity: 0.2 }} />
         {navItems.map((item) => (
@@ -288,7 +292,7 @@ const Navigation = () => {
               to={item.path}
               selected={location.pathname === item.path}
               onClick={() => setActiveGenerator(item.type)}
-              sx={{ py: 1.2 }}
+              sx={{ py: 1.5 }}
             >
               <ListItemIcon sx={{ minWidth: 40 }}>
                 {item.icon}
@@ -308,7 +312,7 @@ const Navigation = () => {
         ))}
         
         <ListItem disablePadding sx={{ mt: 1 }}>
-          <ListItemButton onClick={toggleSettings} sx={{ py: 1.2 }}>
+          <ListItemButton onClick={toggleSettings} sx={{ py: 1.5 }}>
             <ListItemIcon sx={{ minWidth: 40 }}>
               <TuneOutlined />
             </ListItemIcon>
@@ -323,12 +327,12 @@ const Navigation = () => {
       <Box sx={{ 
         overflowY: 'auto', 
         flexGrow: 1,
-        pt: 1,
-        pb: 2,
-        px: 2,
+        pt: 2,
+        pb: 3,
+        px: 3,
       }}>
         <Collapse in={settingsExpanded} timeout="auto" unmountOnExit>
-          <Box sx={{ py: 1 }}>
+          <Box sx={{ py: 2 }}>
             {getCurrentParams()}
           </Box>
         </Collapse>
@@ -409,7 +413,8 @@ function App() {
               component="main"
               sx={{
                 flexGrow: 1,
-                p: 3,
+                p: { xs: 2, md: 0 }, // Remove padding on desktop for closer fit with sidebar
+                pl: { md: 0 }, // Remove left padding completely
                 width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
                 ml: { md: `${DRAWER_WIDTH}px` },
                 overflowX: 'hidden',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext, useRef, useLayoutEffect } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -83,6 +83,20 @@ export const ImageParams: React.FC<{
     randomSeed, setRandomSeed, loading, handleGenerate, error
   } = props;
 
+  // Reference to the prompt input element to maintain cursor position
+  const promptInputRef = useRef<HTMLTextAreaElement>(null);
+  
+  // Track cursor position
+  const [cursorPosition, setCursorPosition] = useState<{start: number; end: number} | null>(null);
+  
+  // Apply cursor position after render
+  useLayoutEffect(() => {
+    if (cursorPosition && promptInputRef.current) {
+      promptInputRef.current.selectionStart = cursorPosition.start;
+      promptInputRef.current.selectionEnd = cursorPosition.end;
+    }
+  }, [cursorPosition, prompt]);
+
   return (
     <Stack spacing={2.5}>
       <TextField
@@ -92,10 +106,37 @@ export const ImageParams: React.FC<{
         multiline
         rows={4}
         value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
+        onChange={(e) => {
+          // Store the current cursor position
+          if (promptInputRef.current) {
+            const start = promptInputRef.current.selectionStart;
+            const end = promptInputRef.current.selectionEnd;
+            setCursorPosition({ start, end });
+          }
+          
+          // Update the state with the new value
+          setPrompt(e.target.value);
+        }}
+        onKeyDown={(e) => {
+          // Also store position on key down to catch position before change
+          if (promptInputRef.current) {
+            const start = promptInputRef.current.selectionStart;
+            const end = promptInputRef.current.selectionEnd;
+            setCursorPosition({ start, end });
+          }
+        }}
+        onClick={() => {
+          // Also update cursor position on click
+          if (promptInputRef.current) {
+            const start = promptInputRef.current.selectionStart;
+            const end = promptInputRef.current.selectionEnd;
+            setCursorPosition({ start, end });
+          }
+        }}
         disabled={loading}
         variant="outlined"
         sx={{ mb: 1 }}
+        inputRef={promptInputRef}
       />
       
       <Divider sx={{ opacity: 0.6, my: 1 }} />

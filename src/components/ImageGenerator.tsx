@@ -692,25 +692,25 @@ export const ImageGenerator: React.FC = () => {
         minHeight: '100vh'
       }}>
         <Box sx={{
-          width: 'calc(100% - 220px)', // Account for the sidebar width minus overlap
+          width: '100%',
+          maxWidth: '1100px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          gap: 2, // Reduced gap for minimal spacing between elements
-          mx: 'auto', // Center the content box
+          gap: 2,
+          mx: 'auto',
           position: 'relative'
         }}>
             {/* Generated image display */}
             {/* This placeholder was moved into the ternary condition above */}
             
-            {/* Main container with fixed position - only renders ONE of the three states */}
+            {/* Main container with proper positioning */}
             <Box sx={{
               position: 'relative',
-              width: '1050px',
-              height: '1050px',
-              ml: { xs: 0, md: -120 },
-              left: '50%',
-              transform: 'translateX(calc(-50% + 60px))',
+              width: '100%',
+              maxWidth: '1050px',
+              aspectRatio: '1/1',
+              mx: 'auto', // Properly center without extending into sidebar
               mb: 2
             }}>
               {/* Rendering logic: only show one state at a time based on priority */}
@@ -783,8 +783,8 @@ export const ImageGenerator: React.FC = () => {
                       alt="generated"
                       onClick={() => setLightboxOpen(true)}
                       sx={{
-                        width: '1050px',
-                        height: '1050px',
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'contain',
                         backgroundColor: 'rgba(0,0,0,0.2)',
                         display: 'block',
@@ -927,17 +927,15 @@ export const ImageGenerator: React.FC = () => {
                   borderRadius: '16px', // More rounded corners
                   borderLeft: '4px solid',
                   borderColor: 'primary.main',
-                  ml: { xs: 0, md: -120 }, // Extend into sidebar area per user preference
                   mt: 3, // Add space between the image and this prompt box
                   backgroundColor: alpha('#121212', 0.5),
-                  width: '1050px',
+                  width: '100%',
+                  maxWidth: '1050px',
                   display: 'flex',
                   flexDirection: 'column',
                   boxSizing: 'border-box',
                   wordBreak: 'break-word',
-                  position: 'relative',
-                  left: '50%',
-                  transform: 'translateX(calc(-50% + 60px))', // Center in viewport while respecting sidebar extension
+                  mx: 'auto', // Center properly without extending into the sidebar
                   zIndex: 5 // Ensure enhanced prompt appears above other elements
                 }}>
                   <Typography variant="subtitle1" fontWeight={500} gutterBottom>

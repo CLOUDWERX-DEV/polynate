@@ -505,16 +505,16 @@ function App() {
               <Navigation />
             </Drawer>
 
-            {/* Main content area */}
+            {/* Main content area with no constraints */}
             <Box
               component="main"
               sx={{
                 flexGrow: 1,
-                p: { xs: 2, md: 0 }, // Remove padding on desktop for closer fit with sidebar
-                pl: { md: 0 }, // Remove left padding completely
-                width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
                 ml: { md: `${DRAWER_WIDTH}px` },
-                overflowX: 'hidden',
+                position: 'relative',
+                overflow: 'visible',
+                p: 0,
+                boxSizing: 'border-box'
               }}
             >
               <Routes>

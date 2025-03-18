@@ -39,6 +39,7 @@ export const ImageGenerator: React.FC = () => {
   const [safe, setSafe] = useState<boolean>(false);
   const [privateMode, setPrivateMode] = useState<boolean>(true);
   const [seedValue, setSeedValue] = useState<string>('');
+  const [randomSeed, setRandomSeed] = useState<boolean>(true); // Random seed enabled by default
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -158,34 +159,45 @@ export const ImageGenerator: React.FC = () => {
       setLoading(true);
       setError(null);
       
+      // Generate a random seed if random seed toggle is enabled
+      let currentSeed = seedValue;
+      if (randomSeed) {
+        currentSeed = Math.floor(Math.random() * 1000000).toString();
+        console.log('Generated random seed:', currentSeed);
+      }
+      
+      // Prepare the prompt - if enhance is on, we'll use API enhancement directly
+      // rather than showing the enhanced prompt in the UI
+      const finalPrompt = prompt;
+      
       // Log current state for debugging
       console.log('Generating image with model:', model);
-      console.log('Current models in dropdown:', models);
+      console.log('Using seed:', currentSeed || 'None (random)');
       
       // Prepare params for image generation
       const params: ImageGenParams = {
-        prompt: enhance && enhancedPrompt ? enhancedPrompt : prompt,
+        prompt: finalPrompt,
         width,
         height,
-        model, // Make sure this is the selected model's ID
-        enhance,
+        model,
+        enhance, // Let the API handle enhancement
         nologo: noLogo,
         safe,
         private: privateMode
       };
       
-      // Add seed if provided
-      if (seedValue !== '') {
-        params.seed = Number(seedValue);
+      // Add seed if one is available (random or fixed)
+      if (currentSeed) {
+        params.seed = Number(currentSeed);
       }
       
       // Log the full URL that will be generated
-      const baseUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(params.prompt)}`;
+      const baseUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}`;
       const queryParams = new URLSearchParams({
         width: width.toString(),
         height: height.toString(),
         model: model,
-        ...(seedValue && { seed: seedValue }),
+        ...(currentSeed && { seed: currentSeed }),
         ...(noLogo && { nologo: 'true' }),
         ...(privateMode && { private: 'true' }),
         ...(enhance && { enhance: 'true' }),
@@ -197,6 +209,11 @@ export const ImageGenerator: React.FC = () => {
       const url = await pollinationsService.generateImage(params);
       console.log('Final image URL from service:', url);
       setImageUrl(url);
+      
+      // Update the UI with the seed we used (if it was random)
+      if (randomSeed) {
+        setSeedValue(currentSeed);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -253,43 +270,50 @@ export const ImageGenerator: React.FC = () => {
             <Divider sx={{ my: 2 }} />
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-              <FormControl fullWidth>
-                <InputLabel>Width</InputLabel>
-                <Select
-                  value={width}
-                  onChange={(e) => setWidth(Number(e.target.value))}
-                  label="Width"
-                  disabled={loading}
-                >
-                  <MenuItem value={512}>512px</MenuItem>
-                  <MenuItem value={768}>768px</MenuItem>
-                  <MenuItem value={1024}>1024px</MenuItem>
-                  <MenuItem value={1280}>1280px</MenuItem>
-                </Select>
-              </FormControl>
-
-              <FormControl fullWidth>
-                <InputLabel>Height</InputLabel>
-                <Select
-                  value={height}
-                  onChange={(e) => setHeight(Number(e.target.value))}
-                  label="Height"
-                  disabled={loading}
-                >
-                  <MenuItem value={512}>512px</MenuItem>
-                  <MenuItem value={768}>768px</MenuItem>
-                  <MenuItem value={1024}>1024px</MenuItem>
-                  <MenuItem value={1280}>1280px</MenuItem>
-                </Select>
-              </FormControl>
+              <TextField
+                fullWidth
+                label="Width (px)"
+                type="number"
+                value={width}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value > 0 && value <= 2048) {
+                    setWidth(value);
+                  }
+                }}
+                disabled={loading}
+                InputProps={{
+                  inputProps: { min: 128, max: 2048 }
+                }}
+                helperText="Values between 128-2048px"
+              />
 
               <TextField
-                label="Seed (optional)"
+                fullWidth
+                label="Height (px)"
+                type="number"
+                value={height}
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value > 0 && value <= 2048) {
+                    setHeight(value);
+                  }
+                }}
+                disabled={loading}
+                InputProps={{
+                  inputProps: { min: 128, max: 2048 }
+                }}
+                helperText="Values between 128-2048px"
+              />
+
+              <TextField
+                fullWidth
+                label="Seed"
                 type="number"
                 value={seedValue}
                 onChange={(e) => setSeedValue(e.target.value)}
-                disabled={loading}
-                fullWidth
+                disabled={loading || randomSeed}
+                helperText={randomSeed ? "Random seed will be generated" : "Fixed seed value"}
               />
             </Stack>
 
@@ -297,6 +321,16 @@ export const ImageGenerator: React.FC = () => {
               <FormControlLabel
                 control={<Switch checked={enhance} onChange={(e) => setEnhance(e.target.checked)} />}
                 label="Enhance Prompt"
+              />
+              <FormControlLabel
+                control={<Switch checked={randomSeed} onChange={(e) => {
+                  setRandomSeed(e.target.checked);
+                  // Clear seed value when enabling random seed
+                  if (e.target.checked) {
+                    setSeedValue('');
+                  }
+                }} />}
+                label="Random Seed"
               />
               <FormControlLabel
                 control={<Switch checked={noLogo} onChange={(e) => setNoLogo(e.target.checked)} />}

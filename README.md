@@ -1,46 +1,96 @@
-# Getting Started with Create React App
+# Polynate
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="public/logo192.png" alt="Polynate Logo" width="100" />
 
-## Available Scripts
+Polynate is a modern React-based AI playground that provides a user-friendly interface for interacting with various AI generation services from [Pollinations.ai](https://pollinations.ai).
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Text Generation**: Create text content using advanced language models
+- **Image Generation**: Generate images from text prompts with customizable parameters
+- **Audio Generation**: Convert text to speech with different voice options
+- **Image Analysis**: Analyze images using AI vision models
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Getting Started
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+- Node.js (v16+)
+- npm or yarn
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/polynate.git
+cd polynate
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Install dependencies
+npm install
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Start the development server
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser.
 
-### `npm run eject`
+## Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Polynate offers three main generation tools:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. **Text Generator**: Enter a prompt and choose a model to generate AI text
+2. **Image Generator**: Create images from text descriptions with options for dimensions, seed, and more
+3. **Audio Generator**: Convert text to spoken audio with different voice options
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## API Integration
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Polynate integrates with the [Pollinations.ai](https://pollinations.ai) API to provide AI generation services. The integration is seamless and doesn't require API keys for basic usage.
 
-## Learn More
+## Technologies Used
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **React 19**: Modern UI library for building interactive interfaces
+- **TypeScript**: Type-safe JavaScript for better developer experience
+- **Material UI 6**: React component library for clean, responsive design
+- **Axios**: HTTP client for API requests
+- **React Router**: Navigation and routing solution
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Development
+
+### Available Scripts
+
+```bash
+# Run in development mode
+npm start
+
+# Build for production
+npm run build
+
+# Run tests
+npm test
+```
+
+### Project Structure
+
+```
+polynate/
+├── public/               # Static files
+├── src/
+│   ├── components/       # React components
+│   ├── services/         # API services
+│   ├── types/            # TypeScript type definitions
+│   └── App.tsx          # Application entry point
+└── package.json         # Dependencies and scripts
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Pollinations.ai](https://pollinations.ai) for providing the AI generation APIs
+- [React](https://reactjs.org/) and [Material UI](https://mui.com/) teams for excellent libraries

@@ -29,7 +29,9 @@ import {
   ExpandMore,
   ExpandLess,
   SettingsOutlined,
-  TuneOutlined
+  TuneOutlined,
+  GitHub as GitHubIcon,
+  Api as ApiOutlined
 } from '@mui/icons-material';
 import ImageGenerator from './components/ImageGenerator';
 import { ImageParams } from './components/ImageGenerator';
@@ -337,6 +339,86 @@ const Navigation = () => {
             {getCurrentParams()}
           </Box>
         </Collapse>
+      </Box>
+      
+      {/* Footer with attribution links */}
+      <Box sx={{ 
+        py: 0.8, 
+        px: 1.5,
+        borderTop: '1px solid', 
+        borderColor: alpha('#ffffff', 0.1),
+        mt: 'auto',
+        fontSize: '0.65rem',
+        background: theme => alpha(theme.palette.background.paper, 0.05),
+        backdropFilter: 'blur(8px)'
+      }}>
+        {/* Top row with CLOUDWERX LAB and GitHub */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 2
+        }}>
+          <Box component="a" 
+            href="http://polynate.cloudwerx.dev" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            sx={{ 
+              color: theme => theme.palette.primary.main,
+              textDecoration: 'none',
+              fontSize: '0.7rem',
+              fontWeight: 'bold',
+              textShadow: '0 0 10px rgba(255,255,255,0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              '&:hover': { color: theme => theme.palette.primary.light }
+            }}
+          >
+            CLOUDWERX LAB
+          </Box>
+          
+          <Box component="a" 
+            href="http://github.com/CLOUDWERX-LAB/polynate" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            sx={{ 
+              color: alpha('#ffffff', 0.6),
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              '&:hover': { color: '#ffffff' }
+            }}
+          >
+            <GitHubIcon sx={{ fontSize: '0.7rem', mr: 0.5, opacity: 0.8 }} />
+            GitHub
+          </Box>
+        </Box>
+        
+        {/* Bottom row with pollinations.ai */}
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          justifyContent: 'center',
+          mt: 0.3,
+          opacity: 0.7
+        }}>
+          <Box component="a" 
+            href="https://pollinations.ai" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            sx={{ 
+              color: alpha('#ffffff', 0.7),
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              fontSize: '0.6rem',
+              '&:hover': { color: '#ffffff' }
+            }}
+          >
+            <ApiOutlined sx={{ fontSize: '0.7rem', mr: 0.5, opacity: 0.8 }} />
+            Powered by pollinations.ai
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

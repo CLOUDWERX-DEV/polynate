@@ -287,7 +287,15 @@ export const ImageParams: React.FC<{
           mt: 3,
           py: 1.2,
           color: '#333333', // Dark grey text for better contrast
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          bgcolor: theme => theme.palette.primary.main,
+          '&:hover': {
+            bgcolor: theme => theme.palette.primary.dark,
+            color: '#333333'
+          },
+          '& .MuiButton-label': {
+            color: '#333333'
+          }
         }}
       >
         {loading ? <CircularProgress size={24} color="inherit" /> : 'Generate Image'}

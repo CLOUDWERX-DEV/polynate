@@ -194,11 +194,25 @@ export const TextParams: React.FC<{
       
       <Button
         variant="contained"
+        color="primary"
         onClick={handleGenerate}
         disabled={!prompt || loading}
         fullWidth
         startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <PlayArrowOutlined />}
-        sx={{ mt: 1, borderRadius: 1.5, py: 1.2, fontWeight: 'bold' }}
+        sx={{ 
+          mt: 3, 
+          py: 1.2, 
+          color: '#333333', // Dark grey text for better contrast
+          fontWeight: 'bold',
+          bgcolor: theme => theme.palette.primary.main,
+          '&:hover': {
+            bgcolor: theme => theme.palette.primary.dark,
+            color: '#333333'
+          },
+          '& .MuiButton-label': {
+            color: '#333333'
+          }
+        }}
       >
         {loading ? 'Generating...' : 'Generate Text'}
       </Button>

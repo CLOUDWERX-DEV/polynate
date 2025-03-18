@@ -39,7 +39,7 @@ import {
   ZoomIn as ZoomInIcon
 } from '@mui/icons-material';
 import { pollinationsService } from '../services/pollinationsService';
-import { PolynateContext } from '../App';
+import { PolynateContext, GeneratorType } from '../App';
 import { ImageGenParams } from '../types';
 
 interface Model {
@@ -52,7 +52,7 @@ interface Model {
 export const ImageParams: React.FC<{
   prompt: string;
   setPrompt: (prompt: string) => void;
-  enhancedPrompt: string;
+  // enhancedPrompt: string; // Commented out to fix lint warning
   width: number;
   setWidth: (width: number) => void;
   height: number;
@@ -77,7 +77,7 @@ export const ImageParams: React.FC<{
   error: string | null;
 }> = (props) => {
   const {
-    prompt, setPrompt, enhancedPrompt, width, setWidth, height, setHeight,
+    prompt, setPrompt, width, setWidth, height, setHeight,
     model, setModel, models, enhance, setEnhance, noLogo, setNoLogo,
     safe, setSafe, privateMode, setPrivateMode, seedValue, setSeedValue,
     randomSeed, setRandomSeed, loading, handleGenerate, error
@@ -404,7 +404,8 @@ export const ImageGenerator: React.FC = () => {
     fetchImageModels();
   }, []);
 
-  const handlePromptEnhancement = useCallback(async () => {
+  // Comment out handlePromptEnhancement to fix linting issues - can be re-enabled when needed
+  /* const handlePromptEnhancement = useCallback(async () => {
     if (!prompt) return;
     try {
       setLoading(true);
@@ -421,7 +422,7 @@ export const ImageGenerator: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [prompt]);
+  }, [prompt]); */
 
   // Removed automatic prompt enhancement - will only enhance when generating image
   // Enhancement will be handled directly in the handleGenerate function
@@ -546,7 +547,7 @@ export const ImageGenerator: React.FC = () => {
       <ImageParams
         prompt={prompt}
         setPrompt={setPrompt}
-        enhancedPrompt={enhancedPrompt}
+        /* enhancedPrompt property removed */
         width={width}
         setWidth={setWidth}
         height={height}
@@ -584,13 +585,13 @@ export const ImageGenerator: React.FC = () => {
     } else {
       console.error('setImageParams is not available in context');
     }
-  }, [prompt, enhancedPrompt, width, height, model, models, enhance, noLogo, safe, privateMode, seedValue, randomSeed, loading, error, memoizedHandleGenerate, setImageParams]);
+  }, [prompt, enhancedPrompt, width, height, model, models, enhance, noLogo, safe, privateMode, seedValue, randomSeed, loading, error, memoizedHandleGenerate, setImageParams, setPrompt, setWidth, setHeight, setModel, setEnhance, setNoLogo, setSafe, setPrivateMode, setSeedValue, setRandomSeed]);
 
   // Set active generator on mount - only once
   useEffect(() => {
     if (setActiveGenerator) {
       console.log('Setting active generator to image');
-      setActiveGenerator('image');
+      setActiveGenerator('image' as GeneratorType);
     }
   }, [setActiveGenerator]);
 
@@ -741,7 +742,7 @@ export const ImageGenerator: React.FC = () => {
                     <CardMedia
                       component="img"
                       image={imageUrl}
-                      alt="Generated image"
+                      alt="generated"
                       onClick={() => setLightboxOpen(true)}
                       sx={{
                         width: '1050px',

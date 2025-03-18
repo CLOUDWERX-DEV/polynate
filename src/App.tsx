@@ -31,12 +31,13 @@ import {
   SettingsOutlined,
   TuneOutlined
 } from '@mui/icons-material';
-import { ImageGenerator, ImageParams } from './components/ImageGenerator';
+import ImageGenerator from './components/ImageGenerator';
+import { ImageParams } from './components/ImageGenerator';
 import logo from './logo.svg';
-import { TextGenerator } from './components/TextGenerator';
-// TextParams will be implemented later
-import { AudioGenerator } from './components/AudioGenerator';
-// AudioParams will be implemented later
+import TextGenerator from './components/TextGenerator';
+import { TextParams } from './components/TextGenerator';
+import AudioGenerator from './components/AudioGenerator';
+import { AudioParams } from './components/AudioGenerator';
 
 // Create a macOS-inspired glass-like theme
 const theme = createTheme({
@@ -201,7 +202,7 @@ const theme = createTheme({
 });
 
 // Create a context for sharing parameter state between sidebar and content
-type GeneratorType = 'image' | 'text' | 'audio';
+export type GeneratorType = 'image' | 'text' | 'audio';
 
 interface PolynateContextType {
   activeGenerator: GeneratorType;
@@ -215,7 +216,7 @@ interface PolynateContextType {
 }
 
 export const PolynateContext = createContext<PolynateContextType>({
-  activeGenerator: 'image',
+  activeGenerator: 'image' as GeneratorType,
   setActiveGenerator: () => {},
   imageParams: null,
   textParams: null,
@@ -230,9 +231,9 @@ const DRAWER_WIDTH = 340;
 
 // Navigation items
 const navItems = [
-  { name: 'Image', path: '/', icon: <ImageOutlined />, type: 'image' as GeneratorType },
-  { name: 'Text', path: '/text', icon: <TextFieldsOutlined />, type: 'text' as GeneratorType },
-  { name: 'Audio', path: '/audio', icon: <AudiotrackOutlined />, type: 'audio' as GeneratorType },
+  { name: 'Image', path: '/', icon: <ImageOutlined />, type: 'image' as const },
+  { name: 'Text', path: '/text', icon: <TextFieldsOutlined />, type: 'text' as const },
+  { name: 'Audio', path: '/audio', icon: <AudiotrackOutlined />, type: 'audio' as const },
 ];
 
 // Navigation component

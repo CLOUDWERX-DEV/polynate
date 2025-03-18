@@ -243,7 +243,7 @@ export const PolynateContext = createContext<PolynateContextType>({
 });
 
 // The sidebar width
-const DRAWER_WIDTH = 340;
+const DRAWER_WIDTH = 300;
 
 // Navigation items
 const navItems = [
@@ -292,49 +292,57 @@ const Navigation = () => {
       height: '100%',
       overflow: 'hidden' 
     }}>
-      <List sx={{ py: 2, flexShrink: 0, px: 1 }}>
-        <ListItem sx={{ px: 3, mb: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, py: 2 }}>
-            <img src={logo} alt="Polynate Logo" style={{ width: '96px', height: '96px' }} />
+      <List sx={{ py: 1, flexShrink: 0, px: 1 }}>
+        <ListItem sx={{ px: 2, mb: 0.5 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}>
+            <img src={logo} alt="Polynate Logo" style={{ width: '80px', height: '80px' }} />
             <Typography variant="h4" sx={{ fontWeight: 700, letterSpacing: '-0.5px', lineHeight: 1.1, mt: '25px', ml: '-23px' }}>
               Polynate
             </Typography>
           </Box>
         </ListItem>
-        <Divider sx={{ mb: 1, opacity: 0.2 }} />
-        {navItems.map((item) => (
-          <ListItem key={item.name} disablePadding>
-            <ListItemButton 
-              component={Link} 
-              to={item.path}
-              selected={location.pathname === item.path}
-              onClick={() => setActiveGenerator(item.type)}
-              sx={{ py: 1.5 }}
-            >
-              <ListItemIcon sx={{ minWidth: 40 }}>
-                {item.icon}
-              </ListItemIcon>
-              <ListItemText primary={item.name} />
-              {location.pathname === item.path && (
-                <Chip 
-                  label="Active" 
-                  size="small" 
-                  color="primary" 
-                  variant="outlined"
-                  sx={{ height: 20, fontSize: '0.7rem' }}
+        <Divider sx={{ mb: 0.25, opacity: 0.2 }} />
+        <Box sx={{ py: 0.25 }}>
+          {navItems.map((item) => (
+            <ListItem key={item.name} disablePadding sx={{ mb: 0 }}>
+              <ListItemButton 
+                component={Link} 
+                to={item.path}
+                selected={location.pathname === item.path}
+                onClick={() => setActiveGenerator(item.type)}
+                sx={{ py: 0.5, minHeight: '36px' }}
+              >
+                <ListItemIcon sx={{ minWidth: 28 }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText 
+                  primary={item.name} 
+                  primaryTypographyProps={{ fontSize: '0.9rem' }}
                 />
-              )}
-            </ListItemButton>
-          </ListItem>
-        ))}
+                {location.pathname === item.path && (
+                  <Chip 
+                    label="Active" 
+                    size="small" 
+                    color="primary" 
+                    variant="outlined"
+                    sx={{ height: 16, fontSize: '0.6rem' }}
+                  />
+                )}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </Box>
         
-        <ListItem disablePadding sx={{ mt: 1 }}>
-          <ListItemButton onClick={toggleSettings} sx={{ py: 1.5 }}>
-            <ListItemIcon sx={{ minWidth: 40 }}>
+        <ListItem disablePadding sx={{ mt: 0.25 }}>
+          <ListItemButton onClick={toggleSettings} sx={{ py: 0.5, minHeight: '36px' }}>
+            <ListItemIcon sx={{ minWidth: 28 }}>
               <TuneOutlined />
             </ListItemIcon>
-            <ListItemText primary="Parameters" />
-            {settingsExpanded ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText 
+              primary="Parameters" 
+              primaryTypographyProps={{ fontSize: '0.9rem' }}
+            />
+            {settingsExpanded ? <ExpandLess sx={{ fontSize: '1.1rem' }} /> : <ExpandMore sx={{ fontSize: '1.1rem' }} />}
           </ListItemButton>
         </ListItem>
       </List>
@@ -344,12 +352,12 @@ const Navigation = () => {
       <Box sx={{ 
         overflowY: 'auto', 
         flexGrow: 1,
-        pt: 2,
-        pb: 3,
-        px: 3,
+        pt: 1,
+        pb: 2,
+        px: 2,
       }}>
         <Collapse in={settingsExpanded} timeout="auto" unmountOnExit>
-          <Box sx={{ py: 2 }}>
+          <Box sx={{ py: 1 }}>
             {getCurrentParams()}
           </Box>
         </Collapse>
@@ -357,12 +365,12 @@ const Navigation = () => {
       
       {/* Footer with attribution links */}
       <Box sx={{ 
-        py: 0.8, 
-        px: 1.5,
+        py: 0.6, 
+        px: 1.2,
         borderTop: '1px solid', 
         borderColor: alpha('#ffffff', 0.1),
         mt: 'auto',
-        fontSize: '0.65rem',
+        fontSize: '0.62rem',
         background: theme => alpha(theme.palette.background.paper, 0.05),
         backdropFilter: 'blur(8px)'
       }}>
@@ -371,7 +379,7 @@ const Navigation = () => {
           display: 'flex', 
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 2
+          gap: 1.5
         }}>
           <Box component="a" 
             href="http://polynate.cloudwerx.dev" 
@@ -380,7 +388,7 @@ const Navigation = () => {
             sx={{ 
               color: theme => theme.palette.primary.main,
               textDecoration: 'none',
-              fontSize: '0.7rem',
+              fontSize: '0.65rem',
               fontWeight: 'bold',
               textShadow: '0 0 10px rgba(255,255,255,0.2)',
               display: 'flex',

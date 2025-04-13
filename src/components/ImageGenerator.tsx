@@ -85,10 +85,10 @@ export const ImageParams: React.FC<{
 
   // Reference to the prompt input element to maintain cursor position
   const promptInputRef = useRef<HTMLTextAreaElement>(null);
-  
+
   // Track cursor position
   const [cursorPosition, setCursorPosition] = useState<{start: number; end: number} | null>(null);
-  
+
   // Apply cursor position after render
   useLayoutEffect(() => {
     if (cursorPosition && promptInputRef.current) {
@@ -113,7 +113,7 @@ export const ImageParams: React.FC<{
             const end = promptInputRef.current.selectionEnd;
             setCursorPosition({ start, end });
           }
-          
+
           // Update the state with the new value
           setPrompt(e.target.value);
         }}
@@ -138,9 +138,9 @@ export const ImageParams: React.FC<{
         sx={{ mb: 1 }}
         inputRef={promptInputRef}
       />
-      
+
       <Divider sx={{ opacity: 0.6, my: 1 }} />
-      
+
       <FormControl fullWidth variant="outlined" size="small" sx={{ mt: 1 }}>
         <InputLabel>Model</InputLabel>
         <Select
@@ -161,7 +161,7 @@ export const ImageParams: React.FC<{
           ))}
         </Select>
       </FormControl>
-      
+
       <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
           <AspectRatioOutlined fontSize="small" />
@@ -211,15 +211,15 @@ export const ImageParams: React.FC<{
           Values between 128-2048px
         </Typography>
       </Box>
-      
+
       <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <TagOutlined fontSize="small" />
             Seed
           </Box>
-          <IconButton 
-            size="small" 
+          <IconButton
+            size="small"
             onClick={() => {
               if (!randomSeed) {
                 const newSeed = Math.floor(Math.random() * 1000000).toString();
@@ -232,7 +232,7 @@ export const ImageParams: React.FC<{
             <ReplayIcon fontSize="small" />
           </IconButton>
         </Typography>
-        
+
         <Stack direction="row" spacing={2} alignItems="center">
           <TextField
             fullWidth
@@ -249,16 +249,16 @@ export const ImageParams: React.FC<{
           <Tooltip title={randomSeed ? "Using random seed for each generation" : "Using fixed seed value"}>
             <FormControlLabel
               control={
-                <Switch 
-                  size="small" 
-                  checked={randomSeed} 
+                <Switch
+                  size="small"
+                  checked={randomSeed}
                   onChange={(e) => {
                     setRandomSeed(e.target.checked);
                     // Clear seed value when enabling random seed
                     if (e.target.checked) {
                       setSeedValue('');
                     }
-                  }} 
+                  }}
                 />
               }
               label="Random"
@@ -269,9 +269,9 @@ export const ImageParams: React.FC<{
           </Tooltip>
         </Stack>
       </Box>
-      
+
       <Divider sx={{ opacity: 0.6 }} />
-      
+
       <Box sx={{ mt: 3 }}>
         <Typography variant="subtitle2" gutterBottom>
           Options
@@ -279,10 +279,10 @@ export const ImageParams: React.FC<{
         <Stack spacing={2}>
           <FormControlLabel
             control={
-              <Switch 
-                size="small" 
-                checked={enhance} 
-                onChange={(e) => setEnhance(e.target.checked)} 
+              <Switch
+                size="small"
+                checked={enhance}
+                onChange={(e) => setEnhance(e.target.checked)}
               />
             }
             label="Enhance Prompt"
@@ -292,10 +292,10 @@ export const ImageParams: React.FC<{
           />
           <FormControlLabel
             control={
-              <Switch 
-                size="small" 
-                checked={noLogo} 
-                onChange={(e) => setNoLogo(e.target.checked)} 
+              <Switch
+                size="small"
+                checked={noLogo}
+                onChange={(e) => setNoLogo(e.target.checked)}
               />
             }
             label="No Logo"
@@ -305,10 +305,10 @@ export const ImageParams: React.FC<{
           />
           <FormControlLabel
             control={
-              <Switch 
-                size="small" 
-                checked={safe} 
-                onChange={(e) => setSafe(e.target.checked)} 
+              <Switch
+                size="small"
+                checked={safe}
+                onChange={(e) => setSafe(e.target.checked)}
               />
             }
             label="Safe Mode"
@@ -318,10 +318,10 @@ export const ImageParams: React.FC<{
           />
           <FormControlLabel
             control={
-              <Switch 
-                size="small" 
-                checked={privateMode} 
-                onChange={(e) => setPrivateMode(e.target.checked)} 
+              <Switch
+                size="small"
+                checked={privateMode}
+                onChange={(e) => setPrivateMode(e.target.checked)}
               />
             }
             label="Private"
@@ -331,14 +331,14 @@ export const ImageParams: React.FC<{
           />
         </Stack>
       </Box>
-      
+
       <Button
         variant="contained"
         color="primary"
         onClick={handleGenerate}
         disabled={!prompt || loading}
         fullWidth
-        sx={{ 
+        sx={{
           mt: 3,
           py: 1.2,
           color: '#333333', // Dark grey text for better contrast
@@ -392,11 +392,11 @@ export const ImageGenerator: React.FC = () => {
   useEffect(() => {
     // Start with empty models array
     setModels([]);
-    
+
     const fetchImageModels = async () => {
       try {
         console.log('Fetching image models from API...');
-        
+
         // Try direct API call with CORS headers
         const response = await axios.get('https://image.pollinations.ai/models', {
           headers: {
@@ -404,12 +404,12 @@ export const ImageGenerator: React.FC = () => {
             'Access-Control-Allow-Origin': '*'
           }
         });
-        
+
         console.log('Direct image API response:', response.data);
-        
+
         // Process the response data into models
         let apiModels: Model[] = [];
-        
+
         if (response.data) {
           if (Array.isArray(response.data)) {
             // Response is array format
@@ -427,20 +427,20 @@ export const ImageGenerator: React.FC = () => {
             });
           }
         }
-        
+
         console.log('Setting image models from API:', apiModels);
         setModels(apiModels);
       } catch (firstError) {
         console.error('Direct API call failed:', firstError);
-        
+
         // Try fallback to pollinationsService as second attempt
         try {
           console.log('Trying fallback via pollinationsService...');
           const serviceModels = await pollinationsService.getAvailableModels();
           console.log('pollinationsService response:', serviceModels);
-          
+
           let imageModels: Model[] = [];
-          
+
           if (serviceModels) {
             if (serviceModels.imageModels) {
               imageModels = serviceModels.imageModels;
@@ -454,7 +454,7 @@ export const ImageGenerator: React.FC = () => {
                 }));
             }
           }
-          
+
           console.log('Setting image models from service:', imageModels);
           setModels(imageModels);
         } catch (secondError) {
@@ -463,7 +463,7 @@ export const ImageGenerator: React.FC = () => {
         }
       }
     };
-    
+
     fetchImageModels();
   }, []);
 
@@ -476,8 +476,8 @@ export const ImageGenerator: React.FC = () => {
         prompt: `Enhance this image prompt by adding more details and artistic direction: ${prompt}`,
         model: 'mistral'
       });
-      const enhancedText = typeof response === 'string' 
-        ? response 
+      const enhancedText = typeof response === 'string'
+        ? response
         : response.choices?.[0]?.message?.content;
       setEnhancedPrompt(enhancedText || '');
     } catch (err) {
@@ -498,7 +498,7 @@ export const ImageGenerator: React.FC = () => {
       // This is important for the fade transition sequence
       setLoading(true);
       setError(null);
-      
+
       // After setting loading state, clear the image URL to avoid showing the old image during loading
       if (imageUrl) {
         // Store URL in session storage before clearing it from state
@@ -506,9 +506,9 @@ export const ImageGenerator: React.FC = () => {
         // Clear the imageUrl immediately to prevent it from showing during loading
         setImageUrl('');
       }
-      
+
       let finalPrompt = prompt;
-      
+
       // Apply prompt enhancement if the enhance toggle is on - ONLY when generating
       if (enhance && prompt.trim().length > 3) {
         try {
@@ -517,11 +517,11 @@ export const ImageGenerator: React.FC = () => {
             prompt: `Enhance this image prompt by adding more details and artistic direction: ${prompt}`,
             model: 'mistral'
           });
-          
-          const enhancedText = typeof response === 'string' 
-            ? response 
+
+          const enhancedText = typeof response === 'string'
+            ? response
             : response.choices?.[0]?.message?.content;
-          
+
           if (enhancedText) {
             console.log('Enhanced prompt:', enhancedText);
             finalPrompt = enhancedText;
@@ -532,19 +532,19 @@ export const ImageGenerator: React.FC = () => {
           // Continue with original prompt if enhancement fails
         }
       }
-      
+
       // Generate a random seed if random seed toggle is enabled
       let currentSeed = seedValue;
       if (randomSeed) {
         currentSeed = Math.floor(Math.random() * 1000000).toString();
         console.log('Generated random seed:', currentSeed);
       }
-      
+
       // Log current state for debugging
       console.log('Generating image with model:', model);
       console.log('Using seed:', currentSeed || 'None (random)');
       console.log('Using final prompt:', finalPrompt);
-      
+
       // Prepare params for image generation
       const params: ImageGenParams = {
         prompt: finalPrompt,
@@ -556,12 +556,12 @@ export const ImageGenerator: React.FC = () => {
         safe,
         private: privateMode
       };
-      
+
       // Add seed if one is available (random or fixed)
       if (currentSeed) {
         params.seed = Number(currentSeed);
       }
-      
+
       // Log the full URL that will be generated
       const baseUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(finalPrompt)}`;
       const queryParams = new URLSearchParams({
@@ -575,23 +575,23 @@ export const ImageGenerator: React.FC = () => {
       });
       const fullUrl = `${baseUrl}?${queryParams.toString()}`;
       console.log('Full image URL being generated:', fullUrl);
-      
+
       try {
         // Direct approach for testing
         const directUrl = fullUrl;
         console.log('Setting direct URL:', directUrl);
-        
+
         // Also try the service approach
         const serviceUrl = await pollinationsService.generateImage({
           ...params,
           prompt: finalPrompt // Ensure we're using the enhanced prompt if available
         });
         console.log('Service generated URL:', serviceUrl);
-        
+
         // Use the service URL if available, otherwise fallback to direct URL
         const finalUrl = serviceUrl || directUrl;
         console.log('Final image URL being set:', finalUrl);
-        
+
         // Preload the image before updating state to prevent flashing
         await new Promise((resolve, reject) => {
           const img = new Image();
@@ -601,14 +601,14 @@ export const ImageGenerator: React.FC = () => {
         }).catch(err => {
           console.warn('Image preload failed but continuing anyway:', err);
         });
-        
+
         // Set the image URL in state after preloading
         setImageUrl(finalUrl);
       } catch (urlError) {
         console.error('Error generating image URL:', urlError);
         throw urlError;
       }
-      
+
       // Update the UI with the seed we used (if it was random)
       if (randomSeed) {
         setSeedValue(currentSeed);
@@ -625,7 +625,7 @@ export const ImageGenerator: React.FC = () => {
 
   // Create and update params for sidebar - with memoized handleGenerate to prevent unnecessary regeneration
   const memoizedHandleGenerate = useCallback(handleGenerate, [handleGenerate]);
-  
+
   useEffect(() => {
     const imageParamsElement = (
       <ImageParams
@@ -661,7 +661,7 @@ export const ImageGenerator: React.FC = () => {
         error={error}
       />
     );
-    
+
     // Set params in the sidebar context
     if (setImageParams) {
       console.log('Setting image parameters in sidebar context');
@@ -681,7 +681,7 @@ export const ImageGenerator: React.FC = () => {
 
   return (
     <>
-      <Box sx={{ 
+      <Box sx={{
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -703,7 +703,7 @@ export const ImageGenerator: React.FC = () => {
         }}>
             {/* Generated image display */}
             {/* This placeholder was moved into the ternary condition above */}
-            
+
             {/* Main container with proper positioning */}
             <Box sx={{
               position: 'relative',
@@ -717,8 +717,8 @@ export const ImageGenerator: React.FC = () => {
               {/* 1. Loading state has highest priority */}
               {loading ? (
                 <Fade in={loading} timeout={300} appear>
-                  <Box 
-                    sx={{ 
+                  <Box
+                    sx={{
                       width: '100%',
                       height: '100%',
                       display: 'flex',
@@ -735,7 +735,7 @@ export const ImageGenerator: React.FC = () => {
                       zIndex: 50 // Much higher z-index to ensure it's above everything
                     }}
                 >
-                  <Box sx={{ 
+                  <Box sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
@@ -758,9 +758,9 @@ export const ImageGenerator: React.FC = () => {
               ) : imageUrl ? (
                 /* 2. If not loading, show image content if available */
                 <Fade in={true} timeout={800}>
-                  <Card 
-                    elevation={0} 
-                    sx={{ 
+                  <Card
+                    elevation={0}
+                    sx={{
                       borderRadius: '16px',
                       overflow: 'visible',
                       transition: 'all 0.3s ease',
@@ -776,7 +776,7 @@ export const ImageGenerator: React.FC = () => {
                       boxSizing: 'border-box'
                     }}
                 >
-                  <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>  
+                  <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                     <CardMedia
                       component="img"
                       image={imageUrl}
@@ -796,12 +796,12 @@ export const ImageGenerator: React.FC = () => {
                         }
                       }}
                     />
-                    <IconButton 
+                    <IconButton
                       onClick={() => setLightboxOpen(true)}
-                      sx={{ 
-                        position: 'absolute', 
-                        bottom: 16, 
-                        right: 80, 
+                      sx={{
+                        position: 'absolute',
+                        bottom: 16,
+                        right: 80,
                         backgroundColor: 'rgba(0,0,0,0.5)',
                         color: 'white',
                         '&:hover': {
@@ -811,7 +811,7 @@ export const ImageGenerator: React.FC = () => {
                     >
                       <ZoomInIcon />
                     </IconButton>
-                    <IconButton 
+                    <IconButton
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent triggering the main image click (lightbox)
                         // Create a hidden anchor element for downloading
@@ -830,10 +830,10 @@ export const ImageGenerator: React.FC = () => {
                             document.body.removeChild(a);
                           });
                       }}
-                      sx={{ 
-                        position: 'absolute', 
-                        bottom: 16, 
-                        right: 16, 
+                      sx={{
+                        position: 'absolute',
+                        bottom: 16,
+                        right: 16,
                         backgroundColor: 'rgba(0,0,0,0.5)',
                         color: 'white',
                         '&:hover': {
@@ -847,31 +847,31 @@ export const ImageGenerator: React.FC = () => {
                   <CardContent sx={{ py: 2, width: '100%', backgroundColor: alpha('#121212', 0.5), borderRadius: '0 0 16px 16px', mt: 'auto' }}>
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
                       <Stack direction="row" spacing={1} flexWrap="wrap">
-                        <Chip 
-                          label={`${width}×${height}`} 
-                          size="small" 
-                          variant="outlined" 
+                        <Chip
+                          label={`${width}×${height}`}
+                          size="small"
+                          variant="outlined"
                           sx={{ borderRadius: 1 }}
                         />
-                        <Chip 
-                          label={models.find(m => m.id === model)?.name || model} 
-                          size="small" 
+                        <Chip
+                          label={models.find(m => m.id === model)?.name || model}
+                          size="small"
                           variant="outlined"
                           sx={{ borderRadius: 1 }}
                         />
                         {seedValue && (
-                          <Chip 
-                            label={`Seed: ${seedValue}`} 
-                            size="small" 
+                          <Chip
+                            label={`Seed: ${seedValue}`}
+                            size="small"
                             variant="outlined"
                             sx={{ borderRadius: 1 }}
                           />
                         )}
                       </Stack>
-                      
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
+
+                      <Button
+                        size="small"
+                        variant="outlined"
                         onClick={handleGenerate}
                         startIcon={loading ? <CircularProgress size={16} /> : <ShuffleOutlined />}
                         disabled={loading}
@@ -884,46 +884,19 @@ export const ImageGenerator: React.FC = () => {
                 </Fade>
               ) : (
                 /* 3. If not loading and no image, show the empty placeholder */
-                <Box 
-                  sx={{ 
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex', 
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    borderRadius: '16px',
-                    background: alpha('#121212', 0.3),
-                    backdropFilter: 'blur(8px)',
-                    border: '1px dashed rgba(255, 255, 255, 0.15)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxSizing: 'border-box',
-                    pointerEvents: 'none'
-                  }}
-                >
-                  <Box sx={{ 
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'absolute',
-                    inset: 0,
-                    p: 6,
-                    textAlign: 'center'
-                  }}>
-                    <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.25rem', width: '100%', maxWidth: '80%' }}>
-                      Enter a prompt and click Generate to create an image
-                    </Typography>
-                  </Box>
-                </Box>
+                <div className="MuiBox-root css-1memat1" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+                  <Typography variant="h6" color="text.secondary" sx={{ fontSize: '1.25rem', textAlign: 'center', maxWidth: '80%' }}>
+                    Enter a prompt and click Generate to create an image
+                  </Typography>
+                </div>
               )}
             </Box>
-            
+
             {/* Enhanced prompt display - with added margin-top */}
             {enhance && enhancedPrompt && (
               <Fade in={!!enhancedPrompt} timeout={500}>
-                <Paper sx={{ 
-                  p: 3, 
+                <Paper sx={{
+                  p: 3,
                   borderRadius: '16px', // More rounded corners
                   borderLeft: '4px solid',
                   borderColor: 'primary.main',
@@ -941,8 +914,8 @@ export const ImageGenerator: React.FC = () => {
                   <Typography variant="subtitle1" fontWeight={500} gutterBottom>
                     Enhanced Prompt
                   </Typography>
-                  <Typography variant="body2" sx={{ 
-                    whiteSpace: 'pre-wrap', 
+                  <Typography variant="body2" sx={{
+                    whiteSpace: 'pre-wrap',
                     opacity: 0.87,
                     overflowWrap: 'break-word',
                     width: '100%'
@@ -994,7 +967,7 @@ export const ImageGenerator: React.FC = () => {
           >
             <CloseIcon />
           </IconButton>
-          
+
           <IconButton
             onClick={() => {
               // Create a hidden anchor element for downloading
@@ -1027,7 +1000,7 @@ export const ImageGenerator: React.FC = () => {
           >
             <DownloadIcon />
           </IconButton>
-          
+
           <img
             src={imageUrl}
             alt="Generated content based on prompt"

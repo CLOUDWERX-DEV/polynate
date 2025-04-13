@@ -1,11 +1,11 @@
 import React, { useState, useContext, createContext } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { 
-  Box, 
-  Typography, 
-  CssBaseline, 
-  ThemeProvider, 
-  createTheme, 
+import {
+  Box,
+  Typography,
+  CssBaseline,
+  ThemeProvider,
+  createTheme,
   alpha,
   Drawer,
   List,
@@ -19,9 +19,9 @@ import {
   Collapse,
   Chip
 } from '@mui/material';
-import { 
-  ImageOutlined, 
-  TextFieldsOutlined, 
+import {
+  ImageOutlined,
+  TextFieldsOutlined,
   AudiotrackOutlined,
   Menu as MenuIcon,
   ExpandMore,
@@ -255,22 +255,22 @@ const navItems = [
 // Navigation component
 const Navigation = () => {
   const location = useLocation();
-  const { 
-    activeGenerator, 
+  const {
+    activeGenerator,
     setActiveGenerator,
     imageParams,
     textParams,
     audioParams
   } = useContext(PolynateContext);
-  
+
   // Settings panel expansion state
   const [settingsExpanded, setSettingsExpanded] = useState(true);
-  
+
   // Toggle settings expansion
   const toggleSettings = () => {
     setSettingsExpanded(!settingsExpanded);
   };
-  
+
   // Get current parameters based on active generator
   const getCurrentParams = () => {
     switch (activeGenerator) {
@@ -284,25 +284,25 @@ const Navigation = () => {
         return null;
     }
   };
-  
+
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
+    <Box sx={{
+      display: 'flex',
+      flexDirection: 'column',
       height: '100%',
-      overflow: 'hidden' 
+      overflow: 'hidden'
     }}>
       <Box sx={{ pt: 0.75, pb: 0.5, flexShrink: 0, px: 1 }}>
         <Box sx={{ px: 1.5, mb: 0.25 }}>
-          <Box 
+          <Box
             component="a"
             href="http://polynate.cloudwerx.dev"
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: 1.5, 
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
               py: 0.75,
               textDecoration: 'none',
               color: 'inherit',
@@ -323,8 +323,8 @@ const Navigation = () => {
         <Box sx={{ py: 0.25 }}>
           {navItems.map((item) => (
             <ListItem key={item.name} disablePadding sx={{ mb: 0 }}>
-              <ListItemButton 
-                component={Link} 
+              <ListItemButton
+                component={Link}
                 to={item.path}
                 selected={location.pathname === item.path}
                 onClick={() => setActiveGenerator(item.type)}
@@ -333,15 +333,15 @@ const Navigation = () => {
                 <ListItemIcon sx={{ minWidth: 28 }}>
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText 
-                  primary={item.name} 
+                <ListItemText
+                  primary={item.name}
                   primaryTypographyProps={{ fontSize: '0.9rem' }}
                 />
                 {location.pathname === item.path && (
-                  <Chip 
-                    label="Active" 
-                    size="small" 
-                    color="primary" 
+                  <Chip
+                    label="Active"
+                    size="small"
+                    color="primary"
                     variant="outlined"
                     sx={{ height: 16, fontSize: '0.6rem' }}
                   />
@@ -350,25 +350,25 @@ const Navigation = () => {
             </ListItem>
           ))}
         </Box>
-        
+
         <ListItem disablePadding sx={{ mt: 0.25 }}>
           <ListItemButton onClick={toggleSettings} sx={{ py: 0.5, minHeight: '36px' }}>
             <ListItemIcon sx={{ minWidth: 28 }}>
               <TuneOutlined />
             </ListItemIcon>
-            <ListItemText 
-              primary="Parameters" 
+            <ListItemText
+              primary="Parameters"
               primaryTypographyProps={{ fontSize: '0.9rem' }}
             />
             {settingsExpanded ? <ExpandLess sx={{ fontSize: '1.1rem' }} /> : <ExpandMore sx={{ fontSize: '1.1rem' }} />}
           </ListItemButton>
         </ListItem>
       </List>
-      
+
       {/* Parameters section */}
       <Divider sx={{ opacity: 0.2 }} />
-      <Box sx={{ 
-        overflowY: 'auto', 
+      <Box sx={{
+        overflowY: 'auto',
         flexGrow: 1,
         pt: 1,
         pb: 2,
@@ -380,12 +380,12 @@ const Navigation = () => {
           </Box>
         </Collapse>
       </Box>
-      
+
       {/* Footer with attribution links */}
-      <Box sx={{ 
-        py: 0.6, 
+      <Box sx={{
+        py: 0.6,
         px: 1.2,
-        borderTop: '1px solid', 
+        borderTop: '1px solid',
         borderColor: alpha('#ffffff', 0.1),
         mt: 'auto',
         fontSize: '0.62rem',
@@ -393,17 +393,17 @@ const Navigation = () => {
         backdropFilter: 'blur(8px)'
       }}>
         {/* Top row with CLOUDWERX LAB and GitHub */}
-        <Box sx={{ 
-          display: 'flex', 
+        <Box sx={{
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           gap: 1.5
         }}>
-          <Box component="a" 
-            href="http://polynate.cloudwerx.dev" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            sx={{ 
+          <Box component="a"
+            href="http://polynate.cloudwerx.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
               color: theme => theme.palette.primary.main,
               textDecoration: 'none',
               fontSize: '0.65rem',
@@ -416,12 +416,12 @@ const Navigation = () => {
           >
             CLOUDWERX LAB
           </Box>
-          
-          <Box component="a" 
-            href="http://github.com/CLOUDWERX-LAB/polynate" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            sx={{ 
+
+          <Box component="a"
+            href="http://github.com/CLOUDWERX-LAB/polynate"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
               color: alpha('#ffffff', 0.6),
               textDecoration: 'none',
               display: 'flex',
@@ -433,20 +433,20 @@ const Navigation = () => {
             GitHub
           </Box>
         </Box>
-        
+
         {/* Bottom row with pollinations.ai */}
-        <Box sx={{ 
-          display: 'flex', 
+        <Box sx={{
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           mt: 0.3,
           opacity: 0.7
         }}>
-          <Box component="a" 
-            href="https://pollinations.ai" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            sx={{ 
+          <Box component="a"
+            href="https://pollinations.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
               color: alpha('#ffffff', 0.7),
               textDecoration: 'none',
               display: 'flex',
@@ -467,7 +467,7 @@ const Navigation = () => {
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
+
   // State for the active generator and parameters
   const [activeGenerator, setActiveGenerator] = useState<GeneratorType>('image');
   const [imageParams, setImageParams] = useState<React.ReactNode | null>(null);
@@ -501,7 +501,7 @@ function App() {
                   aria-label="open drawer"
                   edge="start"
                   onClick={handleDrawerToggle}
-                  sx={{ 
+                  sx={{
                     backgroundColor: alpha('#242424', 0.7),
                     backdropFilter: 'blur(10px)',
                     '&:hover': { backgroundColor: alpha('#242424', 0.9) }
@@ -531,25 +531,13 @@ function App() {
               <Navigation />
             </Drawer>
 
-            {/* Main content area with no constraints */}
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                ml: { md: `${DRAWER_WIDTH}px` },
-                position: 'relative',
-                overflow: 'visible',
-                p: 0,
-                boxSizing: 'border-box'
-              }}
-            >
-              <Routes>
-                <Route path="/" element={<ImageGenerator />} />
-                <Route path="/text" element={<TextGenerator />} />
-                <Route path="/audio" element={<AudioGenerator />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-            </Box>
+            {/* Routes */}
+            <Routes>
+              <Route path="/" element={<ImageGenerator />} />
+              <Route path="/text" element={<TextGenerator />} />
+              <Route path="/audio" element={<AudioGenerator />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
           </Box>
         </BrowserRouter>
       </ThemeProvider>
